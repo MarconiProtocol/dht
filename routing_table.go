@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net"
 	"time"
-
-	log "github.com/golang/glog"
 	"github.com/nictuku/nettools"
 )
 
@@ -63,7 +61,7 @@ func (r *routingTable) reachableNodes() (tbl map[string][]byte) {
 	tbl = make(map[string][]byte)
 	for addr, r := range r.addresses {
 		if addr == "" {
-			log.V(3).Infof("reachableNodes: found empty address for node %x.", r.id)
+			logger.Infof("reachableNodes: found empty address for node %x.", r.id)
 			continue
 		}
 		if r.reachable && len(r.id) == 20 {
@@ -197,12 +195,12 @@ func (r *routingTable) cleanup(cleanupPeriod time.Duration, p *peerStore) (needP
 	// Needs some serious optimization.
 	for addr, n := range r.addresses {
 		if addr != n.address.String() {
-			log.V(3).Infof("cleanup: node address mismatches: %v != %v. Deleting node", addr, n.address.String())
+			logger.Infof("cleanup: node address mismatches: %v != %v. Deleting node", addr, n.address.String())
 			r.kill(n, p)
 			continue
 		}
 		if addr == "" {
-			log.V(3).Infof("cleanup: found empty address for node %x. Deleting node", n.id)
+			logger.Infof("cleanup: found empty address for node %x. Deleting node", n.id)
 			r.kill(n, p)
 			continue
 		}
@@ -212,7 +210,7 @@ func (r *routingTable) cleanup(cleanupPeriod time.Duration, p *peerStore) (needP
 			}
 			// Tolerate 2 cleanup cycles.
 			if time.Since(n.lastResponseTime) > cleanupPeriod*2+(cleanupPeriod/15) {
-				log.V(4).Infof("DHT: Old node seen %v ago. Deleting", time.Since(n.lastResponseTime))
+				logger.Infof("DHT: Old node seen %v ago. Deleting", time.Since(n.lastResponseTime))
 				r.kill(n, p)
 				continue
 			}
@@ -225,7 +223,7 @@ func (r *routingTable) cleanup(cleanupPeriod time.Duration, p *peerStore) (needP
 			// Not reachable.
 			if len(n.pendingQueries) > maxNodePendingQueries {
 				// Didn't reply to 2 consecutive queries.
-				log.V(4).Infof("DHT: Node never replied to ping. Deleting. %v", n.address)
+				logger.Infof("DHT: Node never replied to ping. Deleting. %v", n.address)
 				r.kill(n, p)
 				continue
 			}
@@ -237,7 +235,7 @@ func (r *routingTable) cleanup(cleanupPeriod time.Duration, p *peerStore) (needP
 	// If this pauses the server for too long I may have to segment the cleanup.
 	// 2000 nodes: it takes ~12ms
 	// 4000 nodes: ~24ms.
-	log.V(3).Info("DHT: Routing table cleanup took %v", duration)
+	logger.Info("DHT: Routing table cleanup took %v", duration)
 	return needPing
 }
 
@@ -266,7 +264,7 @@ func (r *routingTable) neighborhoodUpkeep(n *remoteNode, proto string, p *peerSt
 
 func (r *routingTable) addNewNeighbor(n *remoteNode, displaceBoundary bool, proto string, p *peerStore) {
 	if err := r.insert(n, proto); err != nil {
-		log.V(3).Infof("addNewNeighbor error: %v", err)
+		logger.Infof("addNewNeighbor error: %v", err)
 		return
 	}
 	if displaceBoundary && r.boundaryNode != nil {
@@ -275,7 +273,7 @@ func (r *routingTable) addNewNeighbor(n *remoteNode, displaceBoundary bool, prot
 	} else {
 		r.resetNeighborhoodBoundary()
 	}
-	log.V(4).Infof("New neighbor added %s with proximity %d", nettools.BinaryToDottedPort(n.addressBinaryFormat), r.proximity)
+	logger.Debugf("New neighbor added %s with proximity %d", nettools.BinaryToDottedPort(n.addressBinaryFormat), r.proximity)
 }
 
 // pingSlowly pings the remote nodes in needPing, distributing the pings

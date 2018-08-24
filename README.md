@@ -1,3 +1,9 @@
+#### This repo is forked from https://github.com/nictuku/dht
+
+This is a fork of [nictuku/dht](https://github.com/nictuku/dht) that we've modified to better suit our needs for [Marconi Protocol](https://marconi.org).
+
+***
+
 This is a golang Kademlia/Bittorrent DHT library that implements [BEP
 5](http://www.bittorrent.org/beps/bep_0005.html).
 
