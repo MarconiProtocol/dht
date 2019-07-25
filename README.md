@@ -23,12 +23,12 @@ By default, if left running for several days the DHT node should use approx. 30M
 be adjusted by changing MaxInfoHashes and MaxInfoHashPeers accordingly.
 
 For usage details, see the online documentation at:
-http://godoc.org/github.com/nictuku/dht
+http://godoc.org/github.com/MarconiProtocol/dht
 
 A full example is at:
 [find_infohash_and_wait](examples/find_infohash_and_wait/main.go)
 
-[![Build Status](https://drone.io/github.com/nictuku/dht/status.png)](https://drone.io/github.com/nictuku/dht/latest)
+<!---[![Build Status](https://drone.io/github.com/nictuku/dht/status.png)](https://drone.io/github.com/nictuku/dht/latest)-->
 
 Google+ Community
 -----------------

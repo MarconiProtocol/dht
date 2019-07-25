@@ -46,7 +46,7 @@ import (
 	"sync"
 	"time"
 	"github.com/nictuku/nettools"
-	"gitlab.neji.vm.tc/marconi/log"
+	"github.com/MarconiProtocol/log"
 )
 
 // ===== Logging behavior =====
