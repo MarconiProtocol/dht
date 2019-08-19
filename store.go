@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"path"
-	"strings"
 )
 
 // dhtStore is used to persist the routing table on disk.
@@ -21,16 +20,12 @@ type dhtStore struct {
 }
 
 // mkdirStore() creates a directory to load and save the configuration from.
-// Uses ~/.taipeitorrent if $HOME is set, otherwise falls back to
-// /var/run/taipeitorrent.
-func mkdirStore() string {
-	dir := "/var/run/taipeitorrent"
-	env := os.Environ()
-	for _, e := range env {
-		if strings.HasPrefix(e, "HOME=") {
-			dir = strings.SplitN(e, "=", 2)[1]
-			dir = path.Join(dir, ".taipeitorrent")
-		}
+// Uses cacheDir if cacheDir is set, otherwise falls back to
+// /var/run/marconi.
+func mkdirStore(cacheBaseDir string) string {
+	dir := "/var/run/marconi"
+	if cacheBaseDir != "" {
+		dir = path.Join(cacheBaseDir, ".marconi")
 	}
 	// Ignore errors.
 	os.MkdirAll(dir, 0750)
@@ -43,14 +38,14 @@ func mkdirStore() string {
 	return dir
 }
 
-func openStore(port int, enabled bool) (cfg *dhtStore) {
+func openStore(port int, enabled bool, cacheBaseDir string) (cfg *dhtStore) {
 	// TODO: File locking.
 	cfg = &dhtStore{Port: port}
 	if enabled {
-		cfg.path = mkdirStore()
+		cfg.path = mkdirStore(cacheBaseDir)
 
 		// If a node is running in port 30610, the config should be in
-		// ~/.taipeitorrent/dht-36010
+		// ~/.marconi/dht-36010
 		p := fmt.Sprintf("%v-%v", path.Join(cfg.path, "dht"), port)
 		f, err := os.Open(p)
 		if err != nil {
@@ -71,7 +66,7 @@ func saveStore(s dhtStore) {
 	if s.path == "" {
 		return
 	}
-	tmp, err := ioutil.TempFile(s.path, "taipeitorrent")
+	tmp, err := ioutil.TempFile(s.path, "marconi")
 	if err != nil {
 		log.Println("saveStore tempfile:", err)
 		return

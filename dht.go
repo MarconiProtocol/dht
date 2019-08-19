@@ -83,6 +83,8 @@ type Config struct {
 	//  If true, the node will read the routing table from disk on startup and save routing
 	//  table snapshots on disk every few minutes. Default value: true.
 	SaveRoutingTable bool
+	// When cache is enabled, the routing table should be stored in CacheBaseDir/.marconi.
+	CacheBaseDir string
 	// How often to save the routing table to disk. Default value: 5 minutes.
 	SavePeriod time.Duration
 	// Maximum packets per second to be processed. Disabled if negative. Default value: 100.
@@ -210,7 +212,7 @@ func New(config *Config) (node *DHT, err error) {
 		clientThrottle: nettools.NewThrottler(cfg.ClientPerMinuteLimit, cfg.ThrottlerTrackedClients),
 		tokenSecrets:   []string{newTokenSecret(), newTokenSecret()},
 	}
-	c := openStore(cfg.Port, cfg.SaveRoutingTable)
+	c := openStore(cfg.Port, cfg.SaveRoutingTable, config.CacheBaseDir)
 	node.store = c
 	if len(c.Id) != 20 {
 		c.Id = randNodeId()
