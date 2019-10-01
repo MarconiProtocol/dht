@@ -11,7 +11,7 @@ import (
 	"time"
 
 	bencode "github.com/jackpal/bencode-go"
-	"github.com/nictuku/nettools"
+	"github.com/MarconiProtocol/nettools"
 )
 
 // Search a node again after some time.

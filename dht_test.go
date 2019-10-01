@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/nictuku/nettools"
+	"github.com/MarconiProtocol/nettools"
 )
 
 // ExampleDHT is a simple example that searches for a particular infohash and
@@ -58,7 +58,7 @@ M:
 	}
 	for ih, peers := range infoHashPeers {
 		if len(peers) > 0 {
-			// Peers are encoded in binary format. Decoding example using github.com/nictuku/nettools:
+			// Peers are encoded in binary format. Decoding example using github.com/MarconiProtocol/nettools:
 			//for _, peer := range peers {
 			//	fmt.Println(DecodePeerAddress(peer))
 			//}

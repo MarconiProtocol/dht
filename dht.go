@@ -45,7 +45,7 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"github.com/nictuku/nettools"
+	"github.com/MarconiProtocol/nettools"
 	"github.com/MarconiProtocol/log"
 )
 
@@ -582,10 +582,10 @@ func (d *DHT) helloFromPeer(addr string) {
 }
 
 func (d *DHT) processPacket(p packetType) {
-	logger.Debugf("DHT processing packet from %v", p.raddr.String())
+	logger.Debugf("DHT %p is processing packet from %v", d, p.raddr.String())
 	if !d.clientThrottle.CheckBlock(p.raddr.IP.String()) {
 		totalPacketsFromBlockedHosts.Add(1)
-		logger.Warn("Node exceeded rate limiter. Dropping packet from ", p.raddr.String())
+		logger.Warnf("Node exceeded rate limiter of DHT %p. Dropping packet from %s", d, p.raddr.String())
 		return
 	}
 	if p.b[0] != 'd' {

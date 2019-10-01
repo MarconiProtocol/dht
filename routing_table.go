@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 	"time"
-	"github.com/nictuku/nettools"
+	"github.com/MarconiProtocol/nettools"
 )
 
 func newRoutingTable() *routingTable {
